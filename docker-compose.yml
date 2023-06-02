@@ -1,1 +1,83 @@
+version: "3"
+x-minecraft-java-template: &mjt
+ image: itzg/minecraft-server
+ environment:
+  EULA: "TRUE"
+ tty: true
+ stdin_open: true
+ restart: unless-stopped
+  
+services:
+ bedrockconnect:
+  image: strausmann/minecraft-bedrock-connect
+  restart: always
+  environment:
+   MYSQL_HOST: "db"
+   MYSQL_USER: "minecraft"
+   MYSQL_PASS: "minecraft"
+   MYSQL_DB: "minecraft"
+   CUSTOM_SERVERS: "/config/serverlist.json"
+   SERVER_LIMIT: 25
+  ports:
+  - 19132:19132/udp
+  depends_on:
+  - proxy
+  volumes:
+  - ./bedrockconnect:/config
 
+ db:
+  image: mariadb
+  volumes:
+  - db_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: root
+   MYSQL_DATABASE: minecraft
+   MYSQL_USER: minecraft
+   MYSQL_PASSWORD: minecraft
+
+ proxy:
+  image: itzg/bungeecord
+  ports:
+  - 25577:25577
+  - 19133:19132/udp
+  volumes:
+  - ./bungeecord:/server
+  restart: always
+  depends_on:
+  - minecraft-bedrock
+  - minecraft-java-peaceful
+  - minecraft-java-survival
+  - db
+
+ minecraft-bedrock:
+  image: itzg/minecraft-bedrock-server
+  environment:
+   EULA: "TRUE"
+   GAMEMODE: survival
+   DIFFICULTY: normal
+  stdin_open: true
+  tty: true
+  volumes:
+  - bds:/data
+
+ minecraft-java-peaceful:
+  <<: *mjt
+
+ minecraft-java-survival:
+  <<: *mjt
+
+
+ phpmyadmin:
+  image: phpmyadmin
+  restart: always
+  ports:
+  - 8080:80
+  environment:
+  - PMA_ARBITRARY=1
+  depends_on:
+  - db
+
+volumes:
+ bds: {}
+ proxy: {}
+ db_data: {}

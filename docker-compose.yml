@@ -16,7 +16,6 @@ services:
    MYSQL_USER: "minecraft"
    MYSQL_PASS: "minecraft"
    MYSQL_DB: "minecraft"
-   CUSTOM_SERVERS: "/config/serverlist.json"
    SERVER_LIMIT: 25
   ports:
   - 19132:19132/udp
@@ -24,6 +23,9 @@ services:
   - proxy
   volumes:
   - ./bedrockconnect:/config
+
+ dnsmasq:
+  build: ./dnsmasq
 
  db:
   image: mariadb

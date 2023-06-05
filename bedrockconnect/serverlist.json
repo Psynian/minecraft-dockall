@@ -1,0 +1,14 @@
+[
+	{
+		"name": "Use this one! - BungeeCord",
+		"iconUrl": "http://www.minecraft-dockall.com/icon.png",
+		"address": "www.minecraft-dockall.com",
+		"port": 19133
+	},
+	{
+		"name": "Bedrock",
+		"iconUrl": "http://www.minecraft-dockall.com/icon.png",
+		"address": "www.minecraft-dockall.com",
+		"port": 19134
+	}
+]

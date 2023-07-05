@@ -1,7 +1,7 @@
 FROM alpine
 
 
-RUN apk add --no-cache tini ttyd nginx openssl openssh ca-certificates  && \
+RUN apk add --no-cache tini ttyd nginx openssl openssh ca-certificates nano && \
 echo "export PS1='\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '" >> /etc/profile && \
 echo "alias poweroff='kill 1'" >> /etc/profile
 

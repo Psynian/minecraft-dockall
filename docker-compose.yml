@@ -1,13 +1,45 @@
 version: "3"
 x-minecraft-java-template: &mjt
  image: itzg/minecraft-server
- environment:
-  EULA: "TRUE"
  tty: true
  stdin_open: true
  restart: unless-stopped
+ 
+x-minecraft-java-env-template: 
+ environment: &mjet
+  EULA: "TRUE"
+  INIT_MEMORY: 128M
+  MAX_MEMORY: 1G
+  ONLINE_MODE: "FALSE"
   
 services:
+ minecraft-java-peaceful:
+  <<: *mjt
+  environment:
+   <<: *mjet
+   DIFFICULTY: peaceful
+   WORLD: "/worlds/lobby/"
+   FORCE_WORLD_COPY: "TRUE"
+  volumes:
+  - minecraft-java-peaceful_data:/data
+  - ./worlds:/worlds:ro
+ 
+ minecraft-java-normal:
+  <<: *mjt
+  environment:
+   <<: *mjet
+   DIFFICULTY: normal
+  volumes:
+  - minecraft-java-normal_data:/data
+
+ minecraft-java-creative:
+  <<: *mjt
+  environment:
+   <<: *mjet
+   MODE: creative
+  volumes:
+  - minecraft-java-creative_data:/data
+
  bedrockconnect:
   image: strausmann/minecraft-bedrock-connect
   restart: always
@@ -17,15 +49,19 @@ services:
    MYSQL_PASS: "minecraft"
    MYSQL_DB: "minecraft"
    SERVER_LIMIT: 25
+   CUSTOM_SERVERS: "/config/serverlist.json"
   ports:
   - 19132:19132/udp
-  depends_on:
-  - proxy
   volumes:
-  - ./bedrockconnect:/config
+  - bedrockconnect_data:/config
+  - ./bedrockconnect/serverlist.json:/config/serverlist.json:ro
 
  dnsmasq:
-  build: ./dnsmasq
+  build: ./build/dnsmasq
+  volumes:
+  - ./dnsmasq:/etc/dnsmasq.d:ro
+  ports:
+  - 192.168.68.72:53:53/udp
 
  db:
   image: mariadb
@@ -37,22 +73,26 @@ services:
    MYSQL_USER: minecraft
    MYSQL_PASSWORD: minecraft
 
- proxy:
+ bungeecord:
   image: itzg/bungeecord
+  environment:
+   ENABLE_RCON: "true"
+   RCON_PASSWORD: "demo"
   ports:
   - 25577:25577
-  - 19133:19132/udp
+  - 19133:19133/udp
   volumes:
-  - ./bungeecord:/server
+  - bungeecord_data:/server
+  - ./bungeecord/plugins:/plugins:ro
+  - ./bungeecord/config:/config
   restart: always
   depends_on:
-  - minecraft-bedrock
-  - minecraft-java-peaceful
-  - minecraft-java-survival
   - db
 
  minecraft-bedrock:
   image: itzg/minecraft-bedrock-server
+  ports:
+  - 19134:19132/udp
   environment:
    EULA: "TRUE"
    GAMEMODE: survival
@@ -60,26 +100,59 @@ services:
   stdin_open: true
   tty: true
   volumes:
-  - bds:/data
-
- minecraft-java-peaceful:
-  <<: *mjt
-
- minecraft-java-survival:
-  <<: *mjt
-
+  - minecraft-bedrock_data:/data
 
  phpmyadmin:
-  image: phpmyadmin
+  image: phpmyadmin:fpm-alpine
   restart: always
-  ports:
-  - 8080:80
   environment:
   - PMA_ARBITRARY=1
+  volumes:
+  - phpmyadmin_data:/var/www/html/
   depends_on:
   - db
 
+ web:
+  image: nginx:alpine-slim
+  ports:
+  - 80:80
+  volumes:
+  - ./html:/usr/share/nginx/html:ro
+  - phpmyadmin_data:/var/www/html/
+
+ rcon-web-admin:
+    image: itzg/rcon
+    environment:
+      RWA_USERNAME: admin
+      RWA_PASSWORD: admin
+      RWA_ADMIN: "TRUE"
+      RWA_RCON_HOST: bungeecord
+      RWA_RCON_PASSWORD: "demo"
+    ports:
+      - 4326:4326
+      - 4327:4327
+
+ shelladmin:
+  build: ./build/ttyd
+  ports:
+  - 7681:7681
+  volumes:
+  - minecraft-java-creative_data:/volumes/minecraft-java-creative_data
+  - minecraft-java-peaceful_data:/volumes/minecraft-java-peaceful_data
+  - minecraft-java-normal_data:/volumes/minecraft-java-normal_data
+  - minecraft-bedrock_data:/volumes/minecraft-bedrock_data
+  - db_data:/volumes/db_data
+  - bungeecord_data:/volumes/bungeecord_data
+  - bedrockconnect_data:/volumes/bedrockconnect_data
+  - phpmyadmin_data:/volumes/phymyadmin_data
+  
 volumes:
- bds: {}
- proxy: {}
+ bungeecord_data: {}
+ minecraft-java-creative_data: {}
+ minecraft-java-peaceful_data: {}
+ minecraft-java-normal_data: {}
+ minecraft-bedrock_data: {}
  db_data: {}
+ bungeecord_data: {}
+ bedrockconnect_data: {}
+ phpmyadmin_data: {}

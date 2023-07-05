@@ -5,12 +5,12 @@ Simple script to set up a cluster of Minecraft servers fronted by Bungeecord and
 ***NOT WORKING YET COMING SOON***
 
 Installs the following:
--DNS server/Bedrock connect server to allow Nintendo Switch to play
--Bungeecord server with GeyserMC plugin
--Bedrock server
--MariaDB SQL database
--three Minecraft java servers
--suite of admin tools
+- DNS server/Bedrock connect server to allow Nintendo Switch to play
+- Bungeecord server with GeyserMC plugin
+- Bedrock server
+- MariaDB SQL database
+- three Minecraft java servers
+- suite of admin tools
 
 Instructions for Ubuntu
 
@@ -32,7 +32,7 @@ chmod 755 setup.sh
 ./setup.sh
 ```
 
-Bring up the docker
+Bring up docker
 ```
 docker-compose up
 ```

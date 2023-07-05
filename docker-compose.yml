@@ -61,10 +61,10 @@ services:
   volumes:
   - ./dnsmasq:/etc/dnsmasq.d:ro
   ports:
-  - 192.168.68.87:53:53/udp
+  - 192.168.68.70:53:53/udp
 
  db:
-  image: mariadb
+  image: yobasystems/alpine-mariadb
   volumes:
   - db_data:/var/lib/mysql
   environment:
@@ -79,7 +79,7 @@ services:
    ENABLE_RCON: "true"
    RCON_PASSWORD: "demo"
   ports:
-  - 25577:25577
+  - 25565:25565
   - 19133:19133/udp
   volumes:
   - bungeecord_data:/server
@@ -153,6 +153,5 @@ volumes:
  minecraft-java-normal_data: {}
  minecraft-bedrock_data: {}
  db_data: {}
- bungeecord_data: {}
  bedrockconnect_data: {}
  phpmyadmin_data: {}

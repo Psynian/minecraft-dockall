@@ -1,0 +1,61 @@
+server_connect_timeout: 5000
+enforce_secure_profile: false
+remote_ping_cache: -1
+forge_support: false
+player_limit: -1
+permissions:
+  default:
+  - bungeecord.command.server
+  - bungeecord.command.list
+  admin:
+  - bungeecord.command.alert
+  - bungeecord.command.end
+  - bungeecord.command.ip
+  - bungeecord.command.reload
+  - bungeecord.command.kick
+timeout: 30000
+log_commands: false
+network_compression_threshold: 256
+online_mode: true
+disabled_commands:
+- disabledcommandhere
+servers:
+  lobby:
+    motd: '&1Just another BungeeCord - Forced Host'
+    address: minecraft-java-peaceful:25565
+    restricted: false
+  normal:
+    motd: '&1Normal Java Server'
+    address: minecraft-java-normal:25565
+    restricted: false
+  creative:
+    motd: '&1Creative Java Server'
+    address: minecraft-java-creative:25565
+    restricted: false  
+
+listeners:
+- query_port: 25565
+  motd: '&1Another Bungee server'
+  tab_list: GLOBAL_PING
+  query_enabled: false
+  proxy_protocol: false
+  forced_hosts:
+    pvp.md-5.net: pvp
+  ping_passthrough: false
+  priorities:
+  - lobby
+  bind_local_address: true
+  host: 0.0.0.0:25565
+  max_players: 1
+  tab_size: 60
+  force_default_server: false
+ip_forward: false
+remote_ping_timeout: 5000
+prevent_proxy_connections: false
+groups:
+  md_5:
+  - admin
+connection_throttle: 4000
+stats: d4c7f1e0-4fc4-4c8f-9308-97ea043682b6
+connection_throttle_limit: 3
+log_pings: true

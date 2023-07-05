@@ -1,3 +1,4 @@
-/bungeecord/*.*
-/worlds/*.*
+/bungeecord/plugins/**
+/worlds/lobby/**
 /maps/*.*
+

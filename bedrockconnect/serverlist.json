@@ -1,12 +1,18 @@
 [
 	{
-		"name": "Use this one! - BungeeCord",
+		"name": "BungeeCord - use if connecting externally",
 		"iconUrl": "http://www.minecraft-dockall.com/icon.png",
 		"address": "www.minecraft-dockall.com",
 		"port": 19133
 	},
 	{
-		"name": "Bedrock",
+		"name": "BungeeCord - use if connecting internally",
+		"iconUrl": "http://www.minecraft-dockall.com/icon.png",
+		"address": "192.168.68.70",
+		"port": 19133
+	},
+	{
+		"name": "Bedrock - probably don´t use",
 		"iconUrl": "http://www.minecraft-dockall.com/icon.png",
 		"address": "www.minecraft-dockall.com",
 		"port": 19134

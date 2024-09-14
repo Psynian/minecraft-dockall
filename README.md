@@ -17,7 +17,7 @@ Instructions for Ubuntu
 Setting up Docker environment (run as a non root user)
 ```
 sudo apt update
-sudo apt install docker docker-compose curl wget gh
+sudo apt install docker-compose curl wget git
 sudo gpasswd -a $USER docker
 ```
 

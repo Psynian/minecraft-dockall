@@ -17,13 +17,14 @@ Instructions for Ubuntu
 Setting up Docker environment (run as a non root user)
 ```
 sudo apt update
-sudo apt install docker-compose curl wget git
+sudo apt install docker-compose-v2 curl wget git
 sudo gpasswd -a $USER docker
 ```
 
 Getting the repository
 ```
-gh repo clone Psynian/minecraft-dockall
+git clone https://github.com/Psynian/minecraft-dockall/
+cd minecraft-dockall
 ```
 
 Run the initial setup script
@@ -34,5 +35,5 @@ chmod 755 setup.sh
 
 Bring up docker
 ```
-docker-compose up
+docker compose up
 ```
